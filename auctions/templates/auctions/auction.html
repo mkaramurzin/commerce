@@ -1,0 +1,114 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>Listing: {{ auction.title }}</h1>
+
+    {% if auction.active %}
+        <h6><b>Active</b></h6>
+    {% else %}
+        <h6><b>inactive</b></h6>
+    {% endif %}
+
+    {% if auction.image %}
+        <img src="{{ auction.image }}">
+    {% endif %}
+    <p>{{ auction.description }}</p>
+    {% if auction.active %}
+        {% if user.is_authenticated %}
+            {% if auction in watchlist.auction.all %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input name="rfw" type="submit" class="btn btn-secondary" value="Remove from Watchlist">
+                </form>
+            {% else %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input name="atw" type="submit" class="btn btn-primary" value="Add to Watchlist">
+                </form>
+            {% endif %}
+        {% endif %}
+
+        {% if auction.top_bid %}
+            <h4>Current price: {{ auction.top_bid }}</h4>
+        {% else %}
+            <h4>Current price: {{ auction.price }}</h4>
+        {% endif %}
+
+        {% if request.user == auction.top_bid.user %}
+            <p>{{ bid_count }} bid(s) so far. Your bid is the current bid.</p>
+        {% else %}
+            <p>{{ bid_count }} bid(s) so far. </p>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            {% if request.user != auction.user %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input name="bid"
+                    type="number" min="{{ min_bid }}" max="9999999999" placeholder="Bid">
+                    <input type="submit" class="btn btn-primary" value="Place Bid">
+                </form>
+            {% endif %}
+        {% endif %}
+
+        {% if request.user == auction.user and auction.active %}
+            <form method="POST">
+                {% csrf_token %}
+                <input name="end_auction" class="btn btn-danger" type="submit" value="End Auction Early" />
+            </form>
+        {% endif %}
+    {% else %}
+
+        {% if auction.top_bid %}
+            <h3>
+                <strong>Listing was sold for {{ auction.top_bid }} to {{ auction.top_bid.user }}</strong>
+            </h3>
+        {% else %}
+            <h3>
+                <strong>Listing expired and was not sold</strong>
+            </h3>
+        {% endif %}
+        {% if user.is_authenticated %}
+            {% if auction in watchlist.auction.all %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input name="rfw" type="submit" class="btn btn-secondary" value="Remove from Watchlist">
+                </form>
+            {% else %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input name="atw" type="submit" class="btn btn-primary" value="Add to Watchlist">
+                </form>
+            {% endif %}
+        {% endif %}
+
+    {% endif %}
+
+    <h5>Details:</h5>
+    <ul>
+        <li>Listed by: {{ auction.user }}</li>
+        <li>Listed on: {{ auction.start_date }}</li>
+        <li>Expiry: {{auction.end_date }}</li>
+        <li>Category: {{ auction.category }}</li>
+    </ul>
+
+    <div>
+
+        {% if request.user.is_authenticated and auction.active %}
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="comment" class="comment-text" placeholder="Write a comment..." maxlength="200"></textarea>
+                <input class="btn btn-primary" type="submit" value="Post comment">
+            </form>
+        {% endif %}
+
+        <h5>Comments:</h5>
+
+        {% for comment in auction.comments.all %}
+            <div class="comment">
+                <p>{{ comment.user }}:</p>
+                <p>{{ comment.text }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

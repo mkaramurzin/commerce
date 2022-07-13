@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    {% for auction in auctions %}
+
+            <a href="{% url 'auction' auction=auction.id %}">
+                <div class="listing">
+                    {% if auction.image %}
+                        <div class="image-div">
+                            <img src="{{ auction.image }}" alt="">
+                        </div>
+                    {% else %}
+                        <div class="image-div">
+                            <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930" alt="">
+                        </div>
+                    {% endif %}
+                    <div class="info-div">
+                        <strong><h4>{{ auction.title }}</h4></strong>
+                        <b><h5>Price: ${{ auction.price }}</h5></b>
+                        <p>Created {{ auction.start_date }}</p>
+                        <p>Auction ID: {{ auction.id }}</p>
+                    </div>
+                </div>
+            </a>
+
+    {% endfor %}
+{% endblock %}

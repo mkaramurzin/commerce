@@ -1,0 +1,50 @@
+body {
+    padding: 10px;
+}
+
+.listing {
+    border: 2px solid grey;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 100%;
+    height: 350px;
+}
+
+img {
+    max-width: 400px;
+    max-height: 350px;
+    padding: 10px;
+}
+
+.image-div {
+    display: inline-block;
+    text-align: left;
+}
+
+.info-div {
+    display: inline-block;
+    text-align: left;
+    margin-left: 50px;
+}
+
+.comment-text {
+    width: 50%;
+    display: block;
+    height: 100px;
+}
+
+.comment {
+    border: 1px solid grey;
+    border-radius: 5px;
+    width: 50%;
+    height: fit-content;
+    margin-bottom: 15px;
+    padding: 20px;
+}
+
+#category-select {
+    display: block;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+}
